@@ -1,5 +1,5 @@
 # Pytorch-and-DL
-In this repo, I will learn, practice, and do datascience and DL works with PyTorch
+In this repo, I will learn, practice, and do data science and DL works with PyTorch
 
 ## PyTorch and Deep Learning books
 
