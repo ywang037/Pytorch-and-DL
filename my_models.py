@@ -1,3 +1,5 @@
+# this is the python modules that contains the toy python/pytorch classes when I try to do hands-on practice of model creation and training
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
