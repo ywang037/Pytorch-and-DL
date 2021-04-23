@@ -30,7 +30,7 @@ class CNNCifar(nn.Module):
 
     def forward(self,x):
         x=self.conv_layer(x)
-        x=x.reshape(-1).unsqueeze(dim=0)
+        x=x.view(-1, 16 * 5 * 5)
         logits=self.fc_layer(x)
         return F.log_softmax(logits,dim=1)
 
