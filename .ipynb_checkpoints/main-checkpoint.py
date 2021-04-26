@@ -7,8 +7,8 @@ import torchvision
 from torchvision import transforms
 from torchvision import datasets
 
-from models import CNNCifar
-from data_preparation import data_setup
+# from models import CNNCifar
+# from data_preparation import data_setup
 
 class HyperParam():
     def __init__(self,path,learning_rate=0.1, batch_size=64, epoch=10, momentum=0.9, nesterov=False):
@@ -20,6 +20,81 @@ class HyperParam():
         self.momentum=momentum
         self.nesterov=nesterov        
 
+class CNNCifar(nn.Module):
+    def __init__(self):
+        super(CNNCifar,self).__init__()
+        self.conv_layer = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=6, kernel_size=5),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2),
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2)
+        )
+        self.fc_layer = nn.Sequential(
+            nn.Linear(16*5*5,120),
+            nn.ReLU(),
+            nn.Linear(120,84),
+            nn.ReLU(),
+            nn.Linear(84,10)
+        )
+
+    def forward(self,x):
+        x=self.conv_layer(x)
+        x=x.view(-1, 16 * 5 * 5)
+        logits=self.fc_layer(x)
+        return F.log_softmax(logits,dim=1)
+    
+def data_setup(path, batch_size=64):
+    """
+    returns training data loader and test data loader
+    """
+    # no brainer normalization used in the pytorch tutorial
+    mean_0 = (0.5, 0.5, 0.5)
+    std_0 = (0.5, 0.5, 0.5)
+
+    # alternative normilzation
+    mean_1 = (0.4914, 0.4822, 0.4465)
+    std_1 = (0.2023, 0.1994, 0.2010)
+
+    # configure tranform for training data
+    # standard transform used in the pytorch tutorial 
+    transform_train_0 = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(mean_1,std_1),
+    ])
+
+    # enhanced transform, random crop and flip is optional
+    transform_train_1 = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean_0,std_0),
+    ])
+
+    # alternative, only random crop is used
+    transform_train_2 = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.ToTensor(),
+        transforms.Normalize(mean_1,std_1),
+    ])
+
+    # configure transform for test data
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean_1,std_1),
+    ])
+
+    # setup the training dataset
+    data_train = datasets.CIFAR10(root=path, train=True, download=False, transform=transform_train_0)
+    loader_train = data.DataLoader(data_train, batch_size=batch_size, shuffle=True)
+
+    # setup the test dataset
+    data_test = datasets.CIFAR10(root=path, train=False, download=False, transform=transform_test)
+    loader_test = data.DataLoader(data_test, batch_size=100, shuffle=False)
+
+    return loader_train, loader_test    
+        
 if __name__ == '__main__':
     settings = HyperParam(path='.\data\cifar')
     model = CNNCifar().to(settings.device)

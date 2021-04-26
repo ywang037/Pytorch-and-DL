@@ -25,10 +25,8 @@ def data_setup(path, batch_size=64):
     # configure tranform for training data
     # standard transform used in the pytorch tutorial 
     transform_train_0 = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize(mean_1,std_1),
+        transforms.Normalize(mean_0,std_0),
     ])
 
     # enhanced transform, random crop and flip is optional
