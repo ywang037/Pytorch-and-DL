@@ -65,7 +65,7 @@ class CNNCifarTf(nn.Module):
         return F.log_softmax(logits,dim=1)
         
 
-# the 2-NN example model described and used in the vanilla FL paper
+# the 2-NN model described in the vanilla FL paper for experiments with MNIST
 class TwoNN(nn.Module):
     def __init__(self):
         super(TwoNN,self).__init__()
@@ -78,11 +78,11 @@ class TwoNN(nn.Module):
         )
     def forward(self,x):
         x = x.view(-1,28*28)
-        x = self.nn_layer(x)
-        return F.softmax(x,dim=1)
+        logits = self.nn_layer(x)
+        return F.log_softmax(logits,dim=1)
                  
         
-# the CNN for MNIST
+# the CNN model describted in the vanilla FL paper for experiments with MNIST
 class CNNMnistWy(nn.Module):
     def __init__(self):
         super(CNNMnistWy,self).__init__()
@@ -96,6 +96,8 @@ class CNNMnistWy(nn.Module):
         )
         self.fc_layer = nn.Sequential(
             nn.Linear(in_features=1024,out_features=512),
+            nn.ReLU(),
+            nn.Linear(in_features=512,out_features=10),
             nn.ReLU()
         )
     
@@ -103,7 +105,7 @@ class CNNMnistWy(nn.Module):
         x=self.conv_layer(x)
         x=x.view(-1,1024)
         logits = self.fc_layer(x)
-        return F.softmax(logits,dim=1)
+        return F.log_softmax(logits,dim=1)
         
 def get_count_params(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
