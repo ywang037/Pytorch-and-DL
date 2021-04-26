@@ -64,3 +64,46 @@ class CNNCifarTf(nn.Module):
         logits = self.fc_layer(x)
         return F.log_softmax(logits,dim=1)
         
+
+# the 2-NN example model described and used in the vanilla FL paper
+class TwoNN(nn.Module):
+    def __init__(self):
+        super(TwoNN,self).__init__()
+        self.nn_layer=nn.Sequential(
+            nn.Linear(in_features=28*28,out_features=100),
+            nn.ReLU(),
+            nn.Linear(in_features=100,out_features=100),
+            nn.ReLU(),
+            nn.Linear(in_features=100,out_features=10)
+        )
+    def forward(self,x):
+        x = x.view(-1,28*28)
+        x = self.nn_layer(x)
+        return F.softmax(x,dim=1)
+                 
+        
+# the CNN for MNIST
+class CNNMnistWy(nn.Module):
+    def __init__(self):
+        super(CNNMnistWy,self).__init__()
+        self.conv_layer = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2,stride=2)
+        )
+        self.fc_layer = nn.Sequential(
+            nn.Linear(in_features=1024,out_features=512),
+            nn.ReLU()
+        )
+    
+    def forward(self,x):
+        x=self.conv_layer(x)
+        x=x.view(-1,1024)
+        logits = self.fc_layer(x)
+        return F.softmax(logits,dim=1)
+        
+def get_count_params(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
