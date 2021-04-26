@@ -37,7 +37,7 @@ class CNNCifar(nn.Module):
         return F.log_softmax(logits,dim=1)
 
 # the exmaple model used in the official CNN tutorial of TensorFlow using CIFAR10
-# www.tensorflow.org/tutorials/images/cnn
+# https://www.tensorflow.org/tutorials/images/cnn
 class CNNCifarTf(nn.Module):
     def __init__(self):
         super(CNNCifarTf,self).__init__()
