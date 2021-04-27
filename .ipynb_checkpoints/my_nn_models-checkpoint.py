@@ -55,7 +55,6 @@ class CNNCifarTf(nn.Module):
             nn.Linear(in_features=1024,out_features=64),
             nn.ReLU(),
             nn.Linear(in_features=64,out_features=10),
-            nn.ReLU()
         )
 
     def forward(self,x):
@@ -82,12 +81,12 @@ class TwoNN(nn.Module):
         return F.log_softmax(logits,dim=1)
                  
         
-# the CNN model describted in the vanilla FL paper for experiments with MNIST
+# the CNN model described in the vanilla FL paper for experiments with MNIST
 class CNNMnistWy(nn.Module):
     def __init__(self):
         super(CNNMnistWy,self).__init__()
         self.conv_layer = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5),
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2,stride=2),
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5),
@@ -98,7 +97,6 @@ class CNNMnistWy(nn.Module):
             nn.Linear(in_features=1024,out_features=512),
             nn.ReLU(),
             nn.Linear(in_features=512,out_features=10),
-            nn.ReLU()
         )
     
     def forward(self,x):
