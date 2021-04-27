@@ -1,3 +1,5 @@
+# This script trains some simple CNN and NN with CIFAR10 and MNIST datasets
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7,8 +9,8 @@ import torchvision
 from torchvision import transforms
 from torchvision import datasets
 
-from models import CNNCifar
-from data_preparation import data_setup
+from cifar_mnist_dataloader import data_cifar, data_mnist
+from my_nn_models import CNNCifarTorch, CNNCifarTf, TwoNN, CNNMnistWy, get_count_params
 
 class TaskMnist():
     def __init__(self, nn='cnn_wy'):
@@ -31,10 +33,6 @@ class HyperParam():
         self.epoch=epoch
         self.momentum=momentum
         self.nesterov=nesterov        
-        
-# the function used to count the number of trainable parameters
-def get_count_params(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 # training function
 def train_model(loader_train, loader_test, epochs, loss_fn, optimizer, device):
@@ -80,12 +78,8 @@ if __name__ == '__main__':
     if task.name == 'mnist':
         if task.nn == 'cnn_wy':
             model = CNNMnistWy().to(settings.device)
-        elif task.nn == 'cnn':
-            model = CNNMnist().to(settings.device)
         elif task.nn == '2nn_wy':
             model = TwoNN().to(settings.device)
-        else:
-            model = MLP().to(settings.device)
         loader_train, loader_test = data_mnist(path=settings.datapath,batch_size=settings.bs)
     elif task.name == 'cifar':
         if task.nn == 'cnn_torch':
