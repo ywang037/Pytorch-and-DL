@@ -11,9 +11,9 @@ from torchvision import datasets
 
 # the example model used in the official CNN training tutorial of PyTorch using CIFAR10
 # https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-class CNNCifar(nn.Module):
+class CNNCifarTorch(nn.Module):
     def __init__(self):
-        super(CNNCifar,self).__init__()
+        super(CNNCifarTorch,self).__init__()
         self.conv_layer = nn.Sequential(
             nn.Conv2d(in_channels=3, out_channels=6, kernel_size=5),
             nn.ReLU(),
