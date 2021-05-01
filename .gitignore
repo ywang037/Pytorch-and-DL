@@ -1,0 +1,9 @@
+.DS_Store
+# tensorboard runs
+runs/
+
+__pycache__/
+*.pyc
+
+# Notebook Checkpoints
+.ipynb_checkpoints/
