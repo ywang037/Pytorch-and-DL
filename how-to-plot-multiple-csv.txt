@@ -1,0 +1,7 @@
+https://stackoverflow.com/questions/48125674/how-to-read-multiple-csv-files-store-data-and-plot-in-one-figure-using-python
+
+https://www.javaer101.com/en/article/4104232.html
+
+https://www.tutorialfor.com/questions-109341.htm
+
+https://riptutorial.com/matplotlib/example/31676/multiple-plots-and-multiple-plot-features
