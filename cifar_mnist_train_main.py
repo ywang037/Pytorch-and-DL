@@ -80,7 +80,7 @@ def train_model(loader_train, loader_test, epochs, loss_fn, optimizer, device, r
 if __name__ == '__main__':
     torch.manual_seed(1)
     # configure the task and training settings 
-    task = TaskInit(dataset='cifar', nn='wycnn_tfbndp')
+    task = TaskInit(dataset='cifar', nn='tfcnn')
     settings = HyperParam(path=task.path, learning_rate=0.01, epoch=400, nesterov=False)  
     
     if task.name == 'mnist':
