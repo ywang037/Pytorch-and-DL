@@ -35,7 +35,7 @@ def data_cifar(path, batch_size=100):
     mean_1 = (0.4914, 0.4822, 0.4465)
     std_1 = (0.2023, 0.1994, 0.2010)
 
-    # Alternative transform
+    # Alternative transform: t1
     # enhanced transform, random crop and flip is optional
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
@@ -44,7 +44,7 @@ def data_cifar(path, batch_size=100):
         transforms.Normalize(mean_1,std_1),
     ])
 
-    # # Alternative transform 2, random contrast brightness, whitenning is applied
+    # # Alternative transform: t2, random contrast brightness, whitenning is applied
     # transform_train = transforms.Compose([
     #     transforms.RandomCrop(32, padding=4),
     #     transforms.ColorJitter(brightness=0.2,contrast=0.2,saturation=0.2),
@@ -52,7 +52,7 @@ def data_cifar(path, batch_size=100):
     #     transforms.Normalize(mean_1,std_1),
     # ])
 
-    # # Alternative transform 3, random contrast brightness, whitenning is applied
+    # # Alternative transform: t3, random contrast brightness, whitenning is applied
     # # cropped image has size 24 x 24, which requires the model input size to change accordingly 
     # transform_train = transforms.Compose([
     #     transforms.RandomCrop(24),
