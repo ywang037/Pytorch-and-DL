@@ -16,7 +16,7 @@
 
 ## How to remove persistant cached files when `.gitignore` not working
 1. Install git and open gitbash, 
-2. then direct to the folder, and use `git rm --cached XXXX`, 
+2. then direct to the folder, and use `git rm --cached XXXX` to remove the cache for a file XXXX, or `git rm -r cached ./XXXX` to remove the cached files in folder ./XXXX
 3. then go to github desktop to commit this change. 
 
 It should be OK after this (no matter the relevant folder has been added to `.gitignore` or doing this after perform the above operation).
