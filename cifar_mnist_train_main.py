@@ -10,7 +10,7 @@ from torchvision import transforms
 from torchvision import datasets
 
 from cifar_mnist_dataloader import data_cifar, data_mnist
-from my_nn_models import CNNCifarTorch, CNNCifarTf, CNNCifarTfDp, TwoNN, CNNMnistWy, get_count_params
+from my_nn_models import CNNCifarTorch, CNNCifarTf, CNNCifarTfDp, CNNCifarTfBn, CNNCifarTfBnDp, TwoNN, CNNMnistWy, get_count_params
 import time
 
 from torch.utils.tensorboard import SummaryWriter
@@ -24,7 +24,6 @@ class TaskInit():
             self.path = '../data/cifar'
         self.nn = nn
         
-
 class HyperParam():
     def __init__(self,path,learning_rate=0.1, batch_size=100, epoch=10, momentum=0.9, nesterov=False):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -38,6 +37,7 @@ class HyperParam():
 # training function
 def train_model(loader_train, loader_test, epochs, loss_fn, optimizer, device, run_logger):
     for epoch in range(1, epochs+1):
+        epoch_start = time.time()
         train_loss = 0.0
         test_loss = 0.0
         test_acc = 0.0
@@ -67,8 +67,10 @@ def train_model(loader_train, loader_test, epochs, loss_fn, optimizer, device, r
                 num_correct += pred.eq(labels.view_as(pred)).sum().item()
         test_loss /= len(loader_test.dataset)
         test_acc = num_correct/len(loader_test.dataset)
-        print('Epoch: {:>4}/{} | Training Loss: {:.2f} | Test Loss: {:.2f} | Test accuracy = {:.2f}%'.format(
-            epoch, epochs, train_loss, test_loss, 100*test_acc))
+        epoch_end = time.time()
+        
+        print('Epoch: {:>4}/{} | Training Loss: {:.2f} | Test Loss: {:.2f} | Test accuracy: {:.2f}% | Speed: {:.1f}s/step'.format(
+            epoch, epochs, train_loss, test_loss, 100*test_acc, epoch_end-epoch_start))
         
         # write training loss, test loss, and test acc to tensorboard writer
         run_logger.add_scalar('Train loss', train_loss, epoch)
@@ -77,10 +79,9 @@ def train_model(loader_train, loader_test, epochs, loss_fn, optimizer, device, r
 
 if __name__ == '__main__':
     torch.manual_seed(1)
-    # configure the task and training settings
-    # task = TaskMnist(nn='2nn_wy')    
-    task = TaskInit(dataset='cifar', nn='cnn_torch')
-    settings = HyperParam(path=task.path, learning_rate=0.1, epoch=10, nesterov=False)  
+    # configure the task and training settings 
+    task = TaskInit(dataset='cifar', nn='wycnn_tfbndp')
+    settings = HyperParam(path=task.path, learning_rate=0.01, epoch=400, nesterov=False)  
     
     if task.name == 'mnist':
         if task.nn == 'wycnn':
@@ -95,6 +96,10 @@ if __name__ == '__main__':
             model = CNNCifarTf().to(settings.device)
         elif task.nn == 'wycnn_tfdp':
             model = CNNCifarTfDp().to(settings.device)
+        elif task.nn == 'wycnn_tfbn':
+            model = CNNCifarTfBn().to(settings.device)
+        elif task.nn == 'wycnn_tfbndp':
+            model = CNNCifarTfBnDp().to(settings.device)
         loader_train, loader_test = data_cifar(path=settings.datapath,batch_size=settings.bs)
     
     # set the loss function and optimizer
@@ -122,7 +127,7 @@ if __name__ == '__main__':
     print('\nTraining starts...\n')
 
     # start the tensorboard writer
-    logger_path = f'runs/SGD-{task.name}-{task.nn}/B{settings.bs}-Lr{settings.lr}-R{settings.epoch}'
+    logger_path = f'runs/SGD-{task.name}-{task.nn}/B{settings.bs}-Lr{settings.lr}-R{settings.epoch}-t1'
     logger = SummaryWriter(logger_path)
 
     # start training
@@ -137,4 +142,5 @@ if __name__ == '__main__':
 
     # print the wall-clock-time used
     end=time.time() 
-    print('\nTest run completed, wall clock time elapsed: {:.2f}s'.format(end-start))
+    time_total = (end-start) / 3600
+    print('\nTest run completed, wall clock time elapsed: {:.2f} hrs'.format(time_total))
