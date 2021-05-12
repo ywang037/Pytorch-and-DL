@@ -10,3 +10,4 @@ arxiv/
 
 # tensorboard runs
 # runs/
+*.pyc
