@@ -11,3 +11,5 @@ arxiv/
 # tensorboard runs
 # runs/
 *.pyc
+
+.vscode/settings.json
